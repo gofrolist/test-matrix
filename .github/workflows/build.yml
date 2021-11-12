@@ -1,3 +1,8 @@
+---
+on:
+  push:
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -6,19 +11,22 @@ jobs:
       matrix:
         env:
           - name: dev
-            aws_key_id: ${{ secrets.AWS_GITHUB_ACCESS_KEY_ID }}
-            aws_secret: ${{ secrets.AWS_GITHUB_SECRET_ACCESS_KEY }}
+            aws_key_id: AWS_GITHUB_ACCESS_KEY_ID
+            aws_secret: AWS_GITHUB_SECRET_ACCESS_KEY
           - name: contractors
-            aws_key_id: ${{ secrets.CONTRACTORS_AWS_ACCESS_KEY_ID }}
-            aws_secret: ${{ secrets.CONTRACTORS_AWS_SECRET_ACCESS_KEY }}
+            aws_key_id: CONTRACTORS_AWS_ACCESS_KEY_ID
+            aws_secret: CONTRACTORS_AWS_SECRET_ACCESS_KEY
           - name: training
-            aws_key_id: ${{ secrets.TRAINING_AWS_ACCESS_KEY_ID }}
-            aws_secret: ${{ secrets.TRAINING_AWS_SECRET_ACCESS_KEY }}
+            aws_key_id: TRAINING_AWS_ACCESS_KEY_ID
+            aws_secret: TRAINING_AWS_SECRET_ACCESS_KEY
     steps:
       - uses: actions/checkout@v2
       - name: Test env variables
         env:
           ENV: ${{ matrix.env.name }}
-          AWS_KEY_NAME: ${{ matrix.env.aws_key_id }}
-          AWS_SECRET_NAME: ${{ matrix.env.aws_secret }}
-
+          AWS_KEY_NAME: ${{ secrets[matrix.env.aws_key_id] }}
+          AWS_SECRET_NAME: ${{ secrets[matrix.env.aws_secret] }}
+        run: |
+          echo ${ENV}
+          echo ${AWS_KEY_NAME}
+          echo ${AWS_SECRET_NAME}
