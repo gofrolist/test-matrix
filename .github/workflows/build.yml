@@ -1,0 +1,24 @@
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        env:
+          - name: dev
+            aws_key_id: ${{ secrets.AWS_GITHUB_ACCESS_KEY_ID }}
+            aws_secret: ${{ secrets.AWS_GITHUB_SECRET_ACCESS_KEY }}
+          - name: contractors
+            aws_key_id: ${{ secrets.CONTRACTORS_AWS_ACCESS_KEY_ID }}
+            aws_secret: ${{ secrets.CONTRACTORS_AWS_SECRET_ACCESS_KEY }}
+          - name: training
+            aws_key_id: ${{ secrets.TRAINING_AWS_ACCESS_KEY_ID }}
+            aws_secret: ${{ secrets.TRAINING_AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test env variables
+        env:
+          ENV: ${{ matrix.env.name }}
+          AWS_KEY_NAME: ${{ matrix.env.aws_key_id }}
+          AWS_SECRET_NAME: ${{ matrix.env.aws_secret }}
+
