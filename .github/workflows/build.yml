@@ -4,6 +4,14 @@ on:
   workflow_dispatch:
 
 jobs:
+  ver:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test env variables
+        run: |
+          docker --version
+
   build:
     runs-on: ubuntu-20.04
     strategy:
